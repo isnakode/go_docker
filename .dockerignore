@@ -1,0 +1,12 @@
+# Abaikan folder git
+.git
+.env
+
+*.log
+
+node_modules/
+vendor/
+tmp/
+
+Dockerfile
+.dockerignore

@@ -1,0 +1,47 @@
+name: belajar
+services:
+  app:
+    build: .
+    ports:
+      - 8080:8080
+    depends_on:
+      - migration
+    networks:
+      - default
+      - caddy_net
+  db:
+    image: postgres:18.1-alpine3.23
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    environment:
+      POSTGRES_PASSWORD: tesdb
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - data_db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  migration:
+    image: migrate/migrate
+    env_file:
+      - .env.docker
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./db/migrations:/migrations
+    entrypoint: ""
+    command:
+      - sh
+      - -c
+      - "migrate -path=/migrations/ -database=$${DB_URL} up"
+
+volumes:
+  data_db:
+
+networks:
+  caddy_net:
+    external: true
