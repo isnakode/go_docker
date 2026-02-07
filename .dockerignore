@@ -1,6 +1,5 @@
 # Abaikan folder git
 .git
-.env
 
 *.log
 
