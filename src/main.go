@@ -17,7 +17,7 @@ import (
 //go:generate docker run --rm -v .:/src -w /src sqlc/sqlc generate
 
 func main() {
-	_ = godotenv.Load()
+	_ = godotenv.Load("../.env")
 	dbUrl := os.Getenv("DB_URL")
 	if dbUrl == "" {
 		log.Fatal("DB_URL is required. Application cannot start without a database connection.")
